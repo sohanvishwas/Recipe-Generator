@@ -5,15 +5,20 @@ const {generateContent} = require('../aiIntegration/geminiAi')
 exports.createResponse = async (req, res) => {
     try {
         const question = req.body;
-
+        
+        
         if (!question) {
             return res.status(400).json({ error: "Question is required in the request body." });
         }
 
-        const generatedResponse = await generateContent(question);
-
+        let q2 = question.question
+        console.log(q2);
+        const generatedResponse = await generateContent(q2);
+        console.log(generatedResponse);
+        
+        
         const savedResponse = await Response.create({
-            prompt: question,
+            prompt: q2,
             response: generatedResponse,
         });
 
@@ -27,7 +32,14 @@ exports.createResponse = async (req, res) => {
 exports.getResponses = async (req, res) => {
     try {
         const responses = await Response.find();
-        res.status(200).json(responses);
+        if(responses){
+            res.status(200).json(responses);
+        }
+        else{
+            res.status(400).json({
+                message:"data not found"
+            })
+        }
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -35,7 +47,7 @@ exports.getResponses = async (req, res) => {
 
 exports.getResponseById = async (req, res) => {
     try {
-        const id = req.params;
+        const {id} = req.params;
         const response = await Response.findById(id);
 
         if (!response) {
@@ -51,7 +63,7 @@ exports.getResponseById = async (req, res) => {
 // 3. UPDATE: Update saved response by ID
 exports.updateResponse = async (req, res) => {
     try {
-        const id = req.params;
+        const {id} = req.params;
         const { prompt, response } = req.body;
 
         const updatedResponse = await Response.findByIdAndUpdate(
@@ -73,7 +85,7 @@ exports.updateResponse = async (req, res) => {
 // 4. DELETE: Delete a response by ID
 exports.deleteResponse = async (req, res) => {
     try {
-        const id = req.params;
+        const {id} = req.params;
 
         const deletedResponse = await Response.findByIdAndDelete(id);
 
