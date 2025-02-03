@@ -11,7 +11,7 @@ const Navbar = () => {
   // const [question, setQuestion] = useState("");
   const [showSidebar, setShowSidebar] = useState(false);
   // const navigate = useNavigate();
-  
+
   const [question, setQuestion] = useState('');
   const [shouldSubmit, setShouldSubmit] = useState(false);
   const navigate = useNavigate();
@@ -36,14 +36,20 @@ const Navbar = () => {
         });
 
         if (response.status === 201) {
-          toast.success("Data added successfully!");
+          toast.success("Data added successfully!", {
+            onClose: () => {
+              window.location.reload();
+            },
+            autoClose: 500 // Set the time duration
+          });
+
           setQuestion("");
           setShowSidebar(true);
           navigate("/");
-          window.location.reload();
         } else {
           toast.error("Failed to add data. Please try again.");
         }
+
       } catch (error) {
         console.error("Error adding data:", error.message);
         toast.error("An error occurred. Please try again.");
@@ -54,29 +60,6 @@ const Navbar = () => {
 
     submitData();
   }, [shouldSubmit, question, navigate]); // Dependencies
-
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-
-  //   try {
-  //     const response = await axios.post("http://localhost:3002/api/create/content", {
-  //       question,
-  //     });
-
-  //     if (response.status === 201) {
-  //       toast.success("Data added successfully!");
-  //       setQuestion("");
-  //       setShowSidebar(true);
-
-  //       navigate("/");
-  //     } else {
-  //       toast.error("Failed to add data. Please try again.");
-  //     }
-  //   } catch (error) {
-  //     console.error("Error adding data:", error.message);
-  //     toast.error("An error occurred. Please try again.");
-  //   }
-  // };
 
   return (
     <nav className="bg-gray-900 text-white w-screen h-[10vh] fixed top-0">
@@ -94,7 +77,7 @@ const Navbar = () => {
           <div className="m-auto">
             <form
               onSubmit={handleSubmit}
-              className="flex flex-row md:flex-row justify-center items-center  p-6 md:space-y-0 md:space-x-4"
+              className="flex flex-row md:flex-row justify-center items-center  text-xs p-6 md:space-y-0  md:text-xl md:space-x-4"
             >
               <input
                 type="text"
@@ -102,14 +85,15 @@ const Navbar = () => {
                 value={question}
                 onChange={handleChange}
                 placeholder="Enter Ingredients..."
-                className="w-60 md:w-80 px-4 py-3 rounded-md bg-gray-600 text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-22 px-2 py-3 md:w-80 md:px-4 md:py-3 rounded-md bg-white text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
               />
               <button
                 type="submit"
                 className="bg-blue-500 text-white px-5 py-3 rounded-md hover:bg-blue-600"
               >
-                <FaSearch />
+                {/* <FaSearch /> */}
+                Generate
               </button>
             </form>
           </div>
@@ -134,7 +118,7 @@ const Navbar = () => {
               className="text-gray-400 hover:text-white focus:outline-none"
             >
               <svg
-                className="h-10 w-10"
+                className="h-6 w-6 md:h-10 md:w-10"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
